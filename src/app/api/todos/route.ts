@@ -66,3 +66,38 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: err.message }, { status: 400 });
   }
 }
+
+const deleteSchema = yup.object({});
+export async function DELETE(req: Request) {
+  try {
+    const contentLength = req.headers.get("Content-Length");
+
+    if (contentLength) {
+      const { ...fieldsNotAllowedObj } = await deleteSchema.validate(
+        await req.json()
+      );
+
+      const fieldsNotAllowed = Object.keys(fieldsNotAllowedObj);
+
+      if (fieldsNotAllowed.length) {
+        return NextResponse.json({
+          error: `The following fields are not allowed: ${fieldsNotAllowed.join(
+            ", "
+          )}`,
+        });
+      }
+    }
+
+    const todo = await prisma.todo.deleteMany({
+      where: {
+        complete: true,
+      },
+    });
+
+    return NextResponse.json("OK");
+  } catch (error) {
+    const err = error as Error;
+
+    return NextResponse.json({ error: err.message }, { status: 400 });
+  }
+}
