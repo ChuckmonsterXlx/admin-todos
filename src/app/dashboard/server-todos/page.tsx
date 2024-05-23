@@ -6,18 +6,19 @@ import { CreateTodo, TodosGrid } from "@/todos";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Rest TODOS",
-  description: "List of TODOS",
+  title: "Server TODOS",
+  description: "List of server TODOS",
 };
 
-export default async function RestTodosPage() {
+export default async function ServerTodosPage() {
   const todos = await prisma.todo.findMany({ orderBy: { description: "asc" } });
 
   return (
-    <div>
+    <>
+      <p className="text-3xl mb-4">Server Actions</p>
       <CreateTodo />
 
       <TodosGrid todos={todos} />
-    </div>
+    </>
   );
 }
