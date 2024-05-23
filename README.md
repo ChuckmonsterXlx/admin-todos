@@ -1,3 +1,7 @@
+Fernando Herrera Course
+
+https://cursos.devtalles.com/courses/take/nextjs/lessons/45856412-introduccion
+
 # Development
 
 Steps to build the app in
