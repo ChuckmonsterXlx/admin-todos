@@ -1,6 +1,7 @@
 "use client";
 
 import { setCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface Props {
@@ -12,19 +13,24 @@ export const TabBar = ({
   currentTab = 1,
   tabOptions = [1, 2, 3, 4],
 }: Props) => {
+  const router = useRouter();
   const [selected, setSelected] = useState(currentTab);
 
   const onTabSelected = (tab: number) => {
     setSelected(tab);
     setCookie("selectedTab", tab.toString());
+    router.refresh();
   };
+
+  const gridTemplateColumns = `repeat(${tabOptions.length}, minmax(0, 1fr))`;
 
   return (
     <div
-      className={`transition-all grid w-full space-x-2 rounded-xl bg-gray-200 p-2 grid-cols-${tabOptions.length}`}
+      style={{ gridTemplateColumns }}
+      className={`transition-all grid w-full space-x-2 rounded-xl bg-gray-200 p-2`}
     >
       {tabOptions.map((tabOption) => (
-        <div>
+        <div key={tabOption}>
           <input
             checked={selected === tabOption}
             onChange={() => {}}

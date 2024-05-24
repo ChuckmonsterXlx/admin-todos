@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import Link from "next/link";
 import {
   CiChat1,
   CiMenuBurger,
@@ -52,14 +53,17 @@ export const TopMenu = () => {
           <button className="flex items-center justify-center w-10 h-10 bg-gray-100 border rounded-xl focus:bg-gray-100 active:bg-gray-200">
             <CiChat1 size={25} />
           </button>
-          <button className="flex items-center justify-center h-10 p-2 bg-gray-100 border rounded-xl focus:bg-gray-100 active:bg-gray-200">
+          <Link
+            href={"/dashboard/cart"}
+            className="flex items-center justify-center h-10 p-2 bg-gray-100 border rounded-xl focus:bg-gray-100 active:bg-gray-200"
+          >
             {totalItems > 0 && (
               <span className="mr-2 text-sm font-bold text-blue-800">
                 {totalItems}
               </span>
             )}
             <CiShoppingBasket size={25} />
-          </button>
+          </Link>
         </div>
       </div>
     </div>
