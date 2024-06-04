@@ -1,13 +1,15 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
-import NextAuth, { NextAuthOptions } from "next-auth";
+import type { NextAuthConfig } from "next-auth";
+import NextAuth from "next-auth";
 import { Adapter } from "next-auth/adapters";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaClient } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
-export const authOptions: NextAuthOptions = {
+export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
     GithubProvider({
@@ -21,9 +23,4 @@ export const authOptions: NextAuthOptions = {
   ],
 };
 
-const auth = NextAuth(authOptions);
-
-export const handlers = {
-  GET: auth,
-  POST: auth,
-};
+export const { signIn, signOut, auth, handlers } = NextAuth(authConfig);

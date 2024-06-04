@@ -8,11 +8,10 @@ import {
   IoListOutline,
   IoPersonOutline,
 } from "react-icons/io5";
-import { getServerSession } from "next-auth";
 
 import { SidebarItem } from "./sidebar-item/SidebarItem";
-import { authOptions } from "@/auth";
 import { LogoutButton } from "./buttons/LogoutButton";
+import { auth } from "@/auth.config";
 
 const menuItems = [
   {
@@ -48,7 +47,7 @@ const menuItems = [
 ];
 
 export const Sidebar = async () => {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   const userName = session?.user?.name ?? "No name";
   const avatarUrl =
