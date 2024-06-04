@@ -14,7 +14,8 @@ export default async function DashboardPage() {
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       <WidgetItem title="Logged user S-Side">
         <div className="flex flex-col">
-          <span>{session.user?.name}</span>
+          <span>username {session.user?.name}</span>
+          <span>email: {session.user?.email}</span>
         </div>
       </WidgetItem>
     </div>
