@@ -1,7 +1,13 @@
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
 
 import { auth } from "@/auth.config";
 import { WidgetItem } from "@/components";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "Dashboard Page",
+};
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -17,6 +23,8 @@ export default async function DashboardPage() {
           <span>username {session.user?.name}</span>
           <span>email: {session.user?.email}</span>
         </div>
+
+        <div className="break-all">{JSON.stringify(session)}</div>
       </WidgetItem>
     </div>
   );

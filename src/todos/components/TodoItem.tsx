@@ -1,7 +1,8 @@
-import { Todo } from "@prisma/client";
-import styles from "./TodoItem.module.css";
-import { IoCheckboxOutline, IoSquareOutline } from "react-icons/io5";
 import { startTransition, useOptimistic } from "react";
+import { Todo } from "@prisma/client";
+import { IoCheckboxOutline, IoSquareOutline } from "react-icons/io5";
+
+import styles from "./TodoItem.module.css";
 import { toggleTodoStatus } from "../actions/todo-actions";
 
 interface Props {
@@ -25,7 +26,7 @@ export const TodoItem = ({ todo }: Props) => {
 
       await toggleTodoStatus(todoOptimistic.id, !todoOptimistic.complete);
     } catch (error) {
-      return console.log("Error updating Todo status");
+      return console.error("Error updating Todo status");
     }
   };
 
@@ -33,7 +34,7 @@ export const TodoItem = ({ todo }: Props) => {
     <div
       className={todoOptimistic.complete ? styles.todoDone : styles.todoPending}
     >
-      <div className="flex flex-col sm:flex-row justify-start items-center gap-4">
+      <div className="flex flex-col items-center justify-start gap-4 sm:flex-row">
         <div
           onClick={() => onToggleTodoStatusOptimistic()}
           className={`flex p-2 rounded-md cursor-pointer hover:bg-opacity-60${

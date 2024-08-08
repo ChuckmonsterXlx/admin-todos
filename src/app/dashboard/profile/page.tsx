@@ -1,14 +1,9 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
 
 export default function ProfilePage() {
   const { data: session } = useSession();
-
-  useEffect(() => {
-    console.log("client side");
-  }, []);
 
   return (
     <div>
@@ -18,6 +13,10 @@ export default function ProfilePage() {
         <span>{session?.user?.name ?? "No name"}</span>
         <span>{session?.user?.email ?? "No email"}</span>
         <span>{session?.user?.image ?? "No image"}</span>
+        <span>{session?.user?.id ?? "No uuid"}</span>
+        <span className="capitalize">
+          {session?.user?.roles.join(", ") ?? "no-roles"}
+        </span>
       </div>
     </div>
   );
