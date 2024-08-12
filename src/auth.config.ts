@@ -5,6 +5,9 @@ import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
+import CredentialsProvider from "next-auth/providers/credentials";
+
+import { signInEmailPassword } from "./auth/auth/auth-actions";
 
 const prisma = new PrismaClient();
 
@@ -19,6 +22,41 @@ export const authConfig: NextAuthConfig = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+    }),
+
+    CredentialsProvider({
+      credentials: {
+        email: {
+          label: "Email",
+          type: "email",
+          placeholder: "email@email.com",
+        },
+        password: {
+          label: "Password",
+          type: "password",
+          placeholder: "********",
+        },
+      },
+
+      async authorize(credentials, req) {
+        if (
+          typeof credentials?.email !== "string" ||
+          typeof credentials?.password !== "string"
+        ) {
+          return null;
+        }
+
+        const user = await signInEmailPassword(
+          credentials.email,
+          credentials.password
+        );
+
+        if (user) {
+          return user;
+        } else {
+          return null;
+        }
+      },
     }),
   ],
 
