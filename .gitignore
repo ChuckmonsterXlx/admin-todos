@@ -40,3 +40,6 @@ postgres
 
 # env
 .env
+
+# prisma
+prisma/migrations

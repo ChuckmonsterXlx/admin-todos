@@ -1,6 +1,8 @@
-import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import * as yup from "yup";
+
+import { getUserSessionServer } from "@/auth";
+import prisma from "@/lib/prisma";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -43,6 +45,11 @@ const postSchema = yup.object({
   complete: yup.boolean().optional().default(false),
 });
 export async function POST(req: Request) {
+  const user = await getUserSessionServer();
+  if (!user) {
+    return NextResponse.json("Unauthorized", { status: 401 });
+  }
+
   try {
     const { complete, description, ...fieldsNotAllowedObj } =
       await postSchema.validate(await req.json());
@@ -57,7 +64,9 @@ export async function POST(req: Request) {
       });
     }
 
-    const todo = await prisma.todo.create({ data: { complete, description } });
+    const todo = await prisma.todo.create({
+      data: { complete, description, userId: user.id as string },
+    });
 
     return NextResponse.json(todo);
   } catch (error) {
@@ -69,6 +78,11 @@ export async function POST(req: Request) {
 
 const deleteSchema = yup.object({});
 export async function DELETE(req: Request) {
+  const user = await getUserSessionServer();
+  if (!user) {
+    return NextResponse.json("Unauthorized", { status: 401 });
+  }
+
   try {
     const contentLength = req.headers.get("Content-Length");
 
@@ -91,6 +105,7 @@ export async function DELETE(req: Request) {
     const todo = await prisma.todo.deleteMany({
       where: {
         complete: true,
+        userId: user.id,
       },
     });
 

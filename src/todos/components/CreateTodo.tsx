@@ -2,10 +2,14 @@
 
 import { FormEvent, useState } from "react";
 import { IoTrashOutline } from "react-icons/io5";
-import { createTodo, deleteCompletedTodos } from "../actions/todo-actions";
+import { useRouter } from "next/navigation";
+
+import * as todosApi from "@/todos/helpers/todos";
+import { deleteCompletedTodos } from "../actions/todo-actions";
 
 export const CreateTodo = () => {
   const [description, setDescription] = useState("");
+  const router = useRouter();
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -18,7 +22,10 @@ export const CreateTodo = () => {
       description: description.trim(),
     };
 
-    await createTodo(body.description);
+    await todosApi.createTodo(description);
+
+    router.refresh();
+
     setDescription("");
 
     return;

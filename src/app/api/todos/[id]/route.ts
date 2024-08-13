@@ -1,6 +1,8 @@
-import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import * as yup from "yup";
+
+import { getUserSessionServer } from "@/auth";
+import prisma from "@/lib/prisma";
 
 interface ISegments {
   params: {
@@ -8,14 +10,29 @@ interface ISegments {
   };
 }
 
-export async function GET(req: Request, { params }: ISegments) {
-  const { id } = params;
+const getTodo = async (id: string) => {
+  const user = await getUserSessionServer();
+  if (!user) {
+    return NextResponse.json("Unauthorized", { status: 401 });
+  }
 
   const todo = await prisma.todo.findUnique({
     where: {
       id: id,
     },
   });
+
+  if (todo?.userId !== user.id) {
+    return null;
+  }
+
+  return todo;
+};
+
+export async function GET(req: Request, { params }: ISegments) {
+  const { id } = params;
+
+  const todo = await getTodo(id);
 
   if (!todo) {
     return NextResponse.json(
@@ -37,11 +54,7 @@ export async function PUT(req: Request, { params }: ISegments) {
   try {
     const { id } = params;
 
-    let todo = await prisma.todo.findUnique({
-      where: {
-        id: id,
-      },
-    });
+    let todo = await getTodo(id);
 
     if (!todo) {
       return NextResponse.json(

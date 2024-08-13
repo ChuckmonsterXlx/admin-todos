@@ -11,7 +11,7 @@ import { signInEmailPassword } from "./auth/auth/auth-actions";
 
 const prisma = new PrismaClient();
 
-export const authConfig: NextAuthConfig = {
+export const authOptions: NextAuthConfig = {
   adapter: PrismaAdapter(prisma) as Adapter,
 
   providers: [
@@ -89,4 +89,4 @@ export const authConfig: NextAuthConfig = {
   },
 };
 
-export const { signIn, signOut, auth, handlers } = NextAuth(authConfig);
+export const { signIn, signOut, auth, handlers } = NextAuth(authOptions);
